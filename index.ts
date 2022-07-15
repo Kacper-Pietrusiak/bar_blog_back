@@ -3,6 +3,7 @@ import cors from  'cors';
 import 'express-async-errors';
 import {handleError} from "./utils/error";
 import {postRouter} from "./routers/postRouter";
+import {adminRouter} from "./routers/adminRouter";
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(handleError)
 //Routers
 
 app.use('/drinks', postRouter)
+app.use('/admin', adminRouter)
 
 
 app.listen(3001, '0.0.0.0', () => {

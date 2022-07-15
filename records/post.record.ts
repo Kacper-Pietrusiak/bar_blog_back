@@ -12,6 +12,7 @@ export class PostRecord implements Post{
     img: string;
     text: string;
     ingredients: string;
+    createdAt: Date;
 
 
     constructor(obj: Post) {
@@ -20,6 +21,7 @@ export class PostRecord implements Post{
         this.img = obj.img;
         this.text = obj.text;
         this.ingredients = obj.ingredients;
+        this.createdAt = obj.createdAt;
     }
 
     static async getOne(id:string): Promise<PostRecord | null>{
@@ -41,8 +43,31 @@ export class PostRecord implements Post{
             if(!this.id){
                 this.id = uuid()
             }
+            if(!this.createdAt){
+                this.createdAt = new Date()
+            }
 
-            await pool.execute('INSERT INTO `posts` VALUES(:id, :title, :img, :text, :ingredients )',this)
+            await pool.execute('INSERT INTO `posts` VALUES(:id, :title, :img, :text, :ingredients, :createdAt )',this)
+        }
+        catch (e) {
+            new ValidationError(e)
+        }
+    }
+
+    static async delete(id: string): Promise<void>{
+        try{
+            await pool.execute('DELETE FROM `posts` WHERE `id` = :id', {
+                id,
+            })
+        }
+        catch (e) {
+            new ValidationError(e)
+        }
+    }
+
+    async edit(): Promise<void>{
+        try{
+            await pool.execute('UPDATE `posts` SET  `title`= :title, `img`= :img, `text`= :text, `ingredients`= :ingredients, `createdAt`= :createdAt WHERE `id`= :id', this)
         }
         catch (e) {
             new ValidationError(e)

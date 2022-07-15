@@ -4,4 +4,5 @@ export interface Post {
     img: string;
     text: string;
     ingredients: string;
+    createdAt: Date;
 }
